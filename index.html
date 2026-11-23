@@ -10,6 +10,9 @@
     <!-- Telegram WebApp SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
+    <!-- Monetag rewarded ad SDK (zone 12335949) -->
+    <script src="//libtl.com/sdk.js" data-zone="12335949" data-sdk="show_12335949"></script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet" />
@@ -21,32 +24,42 @@
       :root {
         /* Fallbacks — overridden at runtime by Telegram theme colors when
            the page runs inside Telegram. */
-        --bg: #f2f4f0;
+        --bg: #edf1ec;
         --surface: #ffffff;
-        --surface-2: #e9ede6;
-        --ink: #14231c;
-        --ink-soft: #4c5d54;
-        --line: #d8ded4;
-        --brand: #0c3b2e;
+        --surface-2: #e6ece5;
+        --ink: #122019;
+        --ink-soft: #52645a;
+        --line: #dbe3da;
+        --brand: #0a3d2c;
+        --brand-deep: #052619;
         --brand-ink: #ffffff;
         --gold: #a97b0f;
-        --gold-soft: #f6ead0;
+        --gold-bright: #d9ae3f;
+        --gold-soft: #f4ead0;
         --danger: #a33327;
-        --radius: 14px;
+        --on-brand-danger: #ffb59d;
+        --radius: 18px;
+        --shadow-card: 0 1px 2px rgba(8, 38, 26, .05), 0 12px 32px -14px rgba(8, 38, 26, .22);
+        --shadow-soft: 0 1px 2px rgba(8, 38, 26, .05), 0 5px 16px -8px rgba(8, 38, 26, .18);
       }
       @media (prefers-color-scheme: dark) {
         :root {
-          --bg: #0d130f;
-          --surface: #161e18;
-          --surface-2: #1f2a21;
-          --ink: #e9efe9;
-          --ink-soft: #a7b5aa;
-          --line: #2c3a2f;
+          --bg: #0b100d;
+          --surface: #151d17;
+          --surface-2: #1e2921;
+          --ink: #eaf0ea;
+          --ink-soft: #a5b5a8;
+          --line: #2b3a2f;
           --brand: #7fc7a8;
-          --brand-ink: #0d130f;
+          --brand-deep: #a9dec4;
+          --brand-ink: #0b100d;
           --gold: #e3b94e;
+          --gold-bright: #eec95f;
           --gold-soft: #2e2a18;
           --danger: #e88a7d;
+          --on-brand-danger: #7c1d12;
+          --shadow-card: 0 1px 2px rgba(0, 0, 0, .4), 0 12px 32px -14px rgba(0, 0, 0, .6);
+          --shadow-soft: 0 1px 2px rgba(0, 0, 0, .35), 0 5px 16px -8px rgba(0, 0, 0, .5);
         }
       }
 
@@ -60,112 +73,157 @@
         font-size: 16px;
         line-height: 1.55;
       }
-      .wrap { max-width: 560px; margin: 0 auto; padding: 0 16px 40px; }
+      .wrap { max-width: 560px; margin: 0 auto; padding: 0 16px 48px; }
 
-      /* ---------- Hero ---------- */
-      .hero { padding-top: 18px; }
+      /* ---------- Header ---------- */
+      .hero {
+        margin-top: 16px;
+        background: linear-gradient(155deg, var(--brand) 0%, var(--brand-deep) 100%);
+        color: var(--brand-ink);
+        border-radius: 22px;
+        padding: 18px 18px 20px;
+        box-shadow: var(--shadow-card);
+      }
       .hero-img {
         width: 100%; height: auto; display: block;
-        border-radius: var(--radius);
-        border: 1px solid var(--line);
+        border-radius: 12px;
         background: #f6f3ea;
+        box-shadow: 0 6px 18px -8px rgba(0, 0, 0, .35);
       }
       .hero h1 {
-        font-size: 1.75rem; line-height: 1.15; font-weight: 800;
-        letter-spacing: -0.01em; margin: 18px 0 6px;
+        font-size: 1.85rem; line-height: 1.12; font-weight: 800;
+        letter-spacing: -0.015em; margin: 18px 0 8px;
       }
-      .hero p.lede { margin: 0; color: var(--ink-soft); font-size: 1.02rem; }
+      .hero h1::after {
+        content: ""; display: block; width: 44px; height: 4px; border-radius: 2px;
+        background: linear-gradient(90deg, var(--gold-bright), var(--gold));
+        margin-top: 12px;
+      }
+      .hero p.lede { margin: 0; font-size: 1.02rem; color: color-mix(in srgb, var(--brand-ink) 82%, transparent); }
 
       .disclaimer-strip {
-        margin-top: 14px;
-        background: var(--gold-soft);
-        border: 1px solid var(--line);
+        margin-top: 16px;
+        background: rgba(217, 174, 63, .16);
+        border: 1px solid rgba(217, 174, 63, .45);
         border-radius: 10px;
         padding: 9px 12px;
         font-size: 0.85rem;
         font-weight: 600;
-        color: var(--ink);
+        color: var(--brand-ink);
       }
 
       /* ---------- Wallet / earn ---------- */
       .wallet {
-        margin-top: 18px;
-        background: var(--surface);
-        border: 1px solid var(--line);
-        border-radius: var(--radius);
-        padding: 16px;
+        margin-top: 20px;
+        background: linear-gradient(155deg, var(--brand) 0%, var(--brand-deep) 100%);
+        color: var(--brand-ink);
+        border-radius: 20px;
+        padding: 20px;
+        box-shadow: var(--shadow-card);
       }
       .wallet-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-      .wallet-label { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-soft); }
-      .wallet-balance { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 1.9rem; font-weight: 600; line-height: 1.1; }
-      .wallet-balance small { font-size: 0.95rem; color: var(--ink-soft); font-family: "Libre Franklin", sans-serif; font-weight: 600; }
+      .wallet-label { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: color-mix(in srgb, var(--brand-ink) 68%, transparent); }
+      .wallet-balance { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 2.1rem; font-weight: 600; line-height: 1.1; margin-top: 2px; }
+      .wallet-balance small { font-size: 0.95rem; color: color-mix(in srgb, var(--brand-ink) 68%, transparent); font-family: "Libre Franklin", sans-serif; font-weight: 600; }
       .coin-dot {
-        width: 46px; height: 46px; flex: none; border-radius: 50%;
-        background: var(--gold); color: #fff;
+        width: 50px; height: 50px; flex: none; border-radius: 50%;
+        background: linear-gradient(150deg, var(--gold-bright), var(--gold));
+        color: #221a04;
         display: grid; place-items: center;
-        font-family: "IBM Plex Mono", monospace; font-weight: 600; font-size: 1.15rem;
-        box-shadow: inset 0 0 0 3px rgba(255,255,255,.35);
+        font-family: "IBM Plex Mono", monospace; font-weight: 600; font-size: 1.3rem;
+        box-shadow: inset 0 0 0 3px rgba(255, 255, 255, .35), 0 6px 14px -4px rgba(0, 0, 0, .35);
       }
       .btn {
         appearance: none; border: 0; cursor: pointer;
-        border-radius: 10px; padding: 10px 16px;
+        border-radius: 12px; padding: 12px 18px;
         font: inherit; font-weight: 700; font-size: 0.98rem;
         display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-        transition: opacity .15s ease, transform .1s ease;
+        transition: opacity .15s ease, transform .1s ease, box-shadow .2s ease, background-color .2s ease;
       }
       .btn:active { transform: scale(.985); }
       .btn[disabled] { opacity: .45; cursor: not-allowed; }
-      .btn-brand { background: var(--brand); color: var(--brand-ink); width: 100%; margin-top: 14px; }
-      .btn-gold { background: var(--gold); color: #fff; width: 100%; }
-      @media (prefers-color-scheme: dark) { .btn-gold { color: #171106; } }
+      .btn-brand {
+        background: linear-gradient(155deg, var(--brand), var(--brand-deep));
+        color: var(--brand-ink); width: 100%; margin-top: 14px;
+        box-shadow: var(--shadow-soft);
+      }
+      .wallet .btn-brand {
+        background: linear-gradient(150deg, var(--gold-bright), var(--gold));
+        color: #221a04;
+        box-shadow: 0 8px 20px -8px rgba(0, 0, 0, .45);
+      }
+      .btn-gold {
+        background: linear-gradient(150deg, var(--gold-bright), var(--gold));
+        color: #221a04; width: 100%;
+        box-shadow: var(--shadow-soft);
+      }
       .btn-ghost { background: var(--surface-2); color: var(--ink); }
-      .earn-note { margin: 10px 0 0; font-size: 0.86rem; color: var(--ink-soft); }
-      .ad-status { margin: 10px 0 0; font-size: 0.92rem; font-weight: 600; min-height: 1.4em; }
-      .ad-status.ok { color: var(--brand); }
-      @media (prefers-color-scheme: dark) { .ad-status.ok { color: var(--gold); } }
-      .ad-status.err { color: var(--danger); }
+      .btn-ghost:hover { box-shadow: var(--shadow-soft); }
+      .earn-note { margin: 12px 0 0; font-size: 0.86rem; color: color-mix(in srgb, var(--brand-ink) 78%, transparent); }
+      .earn-note strong { color: var(--gold-bright); }
+      .ad-status { margin: 10px 0 0; font-size: 0.92rem; font-weight: 600; min-height: 1.4em; color: var(--brand-ink); }
+      .ad-status.ok { color: var(--gold-bright); }
+      .ad-status.err { color: var(--on-brand-danger); }
 
       /* ---------- Sections / cards ---------- */
       section.card {
-        margin-top: 18px;
+        margin-top: 20px;
         background: var(--surface);
         border: 1px solid var(--line);
         border-radius: var(--radius);
-        padding: 18px 16px;
+        padding: 22px 20px;
+        box-shadow: var(--shadow-card);
       }
-      .card h2 { font-size: 1.18rem; font-weight: 800; margin: 0 0 4px; letter-spacing: -0.01em; }
-      .card .sub { margin: 0 0 12px; color: var(--ink-soft); font-size: 0.92rem; }
-      .tip-date { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gold); margin: 0 0 6px; }
-      .tip-title { font-size: 1.06rem; font-weight: 700; margin: 0 0 6px; }
+      .card h2 { font-size: 1.22rem; font-weight: 800; margin: 0 0 4px; letter-spacing: -0.01em; line-height: 1.25; }
+      .card h2::after {
+        content: ""; display: block; width: 34px; height: 3px; border-radius: 2px;
+        background: linear-gradient(90deg, var(--gold-bright), var(--gold));
+        margin-top: 9px;
+      }
+      .card .sub { margin: 8px 0 14px; color: var(--ink-soft); font-size: 0.92rem; }
+      .tip-date { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gold); margin: 0 0 8px; }
+      .tip-title { font-size: 1.12rem; font-weight: 700; margin: 0 0 6px; line-height: 1.3; }
       .tip-body { margin: 0; color: var(--ink); }
-      .tip-actions { margin-top: 14px; display: flex; gap: 10px; flex-wrap: wrap; }
+      .tip-actions { margin-top: 16px; display: flex; gap: 10px; flex-wrap: wrap; }
       .tip-actions .btn { flex: 1 1 140px; }
 
       .locked-box {
-        border: 1.5px dashed var(--line);
-        border-radius: 10px;
-        padding: 16px 14px;
+        border: 1.5px dashed color-mix(in srgb, var(--gold) 55%, var(--line));
+        background: var(--gold-soft);
+        border-radius: 14px;
+        padding: 18px 16px;
         text-align: center;
         color: var(--ink-soft);
       }
       .locked-box .lock-title { color: var(--ink); font-weight: 700; font-size: 1rem; margin: 0 0 4px; }
-      .locked-box p { margin: 0 0 12px; font-size: 0.92rem; }
+      .locked-box p { margin: 0 0 14px; font-size: 0.92rem; }
 
       /* ---------- Tabs ---------- */
-      .tabs { display: flex; gap: 8px; margin-top: 20px; }
+      .tabs {
+        display: flex; gap: 4px; margin-top: 22px;
+        background: var(--surface-2);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 5px;
+      }
       .tab-btn {
         flex: 1; appearance: none; cursor: pointer;
-        border: 1px solid var(--line); background: var(--surface);
-        color: var(--ink-soft); border-radius: 10px;
-        font: inherit; font-weight: 700; font-size: 0.92rem; padding: 8px 4px;
+        border: 0; background: transparent;
+        color: var(--ink-soft); border-radius: 999px;
+        font: inherit; font-weight: 700; font-size: 0.9rem; padding: 8px 4px;
+        transition: background-color .25s ease, color .25s ease, box-shadow .25s ease;
       }
-      .tab-btn[aria-selected="true"] { background: var(--brand); color: var(--brand-ink); border-color: var(--brand); }
+      .tab-btn[aria-selected="true"] {
+        background: linear-gradient(155deg, var(--brand), var(--brand-deep));
+        color: var(--brand-ink);
+        box-shadow: var(--shadow-soft);
+      }
 
       /* ---------- Forms & results ---------- */
-      .field { margin-bottom: 14px; }
-      .field label { display: block; font-weight: 600; font-size: 0.92rem; margin-bottom: 5px; }
+      .field { margin-bottom: 14px; min-width: 0; }
+      .field label { display: block; font-weight: 600; font-size: 0.92rem; margin-bottom: 6px; }
       .field .hint { font-weight: 400; color: var(--ink-soft); font-size: 0.82rem; }
-      .input-row { display: flex; align-items: stretch; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--surface); }
+      .input-row { display: flex; align-items: stretch; min-width: 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--surface); transition: border-color .2s ease, box-shadow .2s ease; }
       .input-row .prefix, .input-row .suffix {
         display: grid; place-items: center; padding: 0 12px;
         background: var(--surface-2); color: var(--ink-soft); font-weight: 600; font-size: 0.95rem;
@@ -175,31 +233,31 @@
         font: inherit; font-size: 1.05rem; padding: 10px 12px; color: var(--ink);
         font-family: "IBM Plex Mono", ui-monospace, monospace;
       }
-      .input-row:focus-within { border-color: var(--brand); box-shadow: 0 0 0 2px var(--surface-2); }
+      .input-row:focus-within { border-color: var(--gold); box-shadow: 0 0 0 3px color-mix(in srgb, var(--gold) 22%, transparent); }
       .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
       @media (max-width: 380px) { .grid-2 { grid-template-columns: 1fr; } }
 
-      .results { margin-top: 6px; border-top: 1px solid var(--line); padding-top: 14px; }
-      .result-main { text-align: center; margin-bottom: 12px; }
+      .results { margin-top: 8px; border-top: 1px solid var(--line); padding-top: 16px; }
+      .result-main { text-align: center; margin-bottom: 14px; }
       .result-main .r-label { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-soft); }
-      .result-main .r-value { font-family: "IBM Plex Mono", monospace; font-size: 2rem; font-weight: 600; line-height: 1.15; }
-      .result-rows { display: grid; gap: 8px; }
-      .result-row { display: flex; justify-content: space-between; gap: 12px; font-size: 0.95rem; }
+      .result-main .r-value { font-family: "IBM Plex Mono", monospace; font-size: 2.1rem; font-weight: 600; line-height: 1.15; color: var(--brand); letter-spacing: -0.01em; }
+      .result-rows { display: grid; gap: 0; }
+      .result-row { display: flex; justify-content: space-between; gap: 12px; font-size: 0.95rem; padding: 8px 0; border-bottom: 1px dashed var(--line); }
+      .result-row:last-child { border-bottom: 0; }
       .result-row .k { color: var(--ink-soft); }
       .result-row .v { font-family: "IBM Plex Mono", monospace; font-weight: 600; }
 
-      .bar-row { margin-bottom: 12px; }
-      .bar-row .bar-head { display: flex; justify-content: space-between; font-size: 0.92rem; margin-bottom: 5px; }
+      .bar-row { margin-bottom: 14px; }
+      .bar-row .bar-head { display: flex; justify-content: space-between; gap: 10px; font-size: 0.92rem; margin-bottom: 6px; }
       .bar-row .bar-head .amt { font-family: "IBM Plex Mono", monospace; font-weight: 600; }
-      .bar-track { height: 14px; border-radius: 7px; background: var(--surface-2); overflow: hidden; }
+      .bar-track { height: 14px; border-radius: 7px; background: var(--surface-2); overflow: hidden; box-shadow: inset 0 1px 3px rgba(8, 38, 26, .12); }
       .bar-fill { height: 100%; border-radius: 7px; }
-      .bar-fill.needs { background: #2e7d5b; width: 50%; }
-      .bar-fill.wants { background: #d9a441; width: 30%; }
-      .bar-fill.save { background: var(--brand); width: 20%; }
-      @media (prefers-color-scheme: dark) { .bar-fill.save { background: var(--gold); } }
+      .bar-fill.needs { background: linear-gradient(90deg, #35976d, #2e7d5b); width: 50%; }
+      .bar-fill.wants { background: linear-gradient(90deg, var(--gold-bright), #d9a441); width: 30%; }
+      .bar-fill.save { background: linear-gradient(90deg, var(--brand), var(--brand-deep)); width: 20%; }
       .bar-note { font-size: 0.84rem; color: var(--ink-soft); margin: 2px 0 0; }
 
-      .chart-box { margin-top: 14px; }
+      .chart-box { margin-top: 16px; }
       .chart-box svg { width: 100%; height: auto; display: block; }
       .chart-legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 0.82rem; color: var(--ink-soft); margin-top: 6px; }
       .chart-legend span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
@@ -207,41 +265,43 @@
       .chart-legend .lg-growth::before { background: var(--gold); }
 
       /* ---------- Profile ---------- */
-      .profile-head { display: flex; align-items: center; gap: 14px; margin-top: 6px; }
+      .profile-head { display: flex; align-items: center; gap: 14px; margin-top: 10px; }
       .profile-avatar {
         width: 64px; height: 64px; flex: none; border-radius: 50%; overflow: hidden;
-        background: var(--brand); color: var(--brand-ink);
+        background: linear-gradient(155deg, var(--brand), var(--brand-deep)); color: var(--brand-ink);
         display: grid; place-items: center;
         font-weight: 800; font-size: 1.5rem;
-        border: 1px solid var(--line);
+        border: 2px solid var(--gold-bright);
+        box-shadow: var(--shadow-soft);
       }
       .profile-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
-      .profile-name { margin: 0; font-size: 1.12rem; font-weight: 800; line-height: 1.25; overflow-wrap: anywhere; }
-      .profile-username { margin: 2px 0 0; color: var(--ink-soft); font-size: 0.94rem; overflow-wrap: anywhere; }
-      .profile-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 16px; }
-      .stat-box { background: var(--surface-2); border-radius: 10px; padding: 12px 6px; text-align: center; }
-      .stat-value { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 1.35rem; font-weight: 600; line-height: 1.15; }
-      .stat-label { font-size: 0.78rem; font-weight: 600; color: var(--ink-soft); margin-top: 3px; line-height: 1.3; }
-      @media (max-width: 380px) { .stat-value { font-size: 1.15rem; } }
+      .profile-name { margin: 0; font-size: 1.14rem; font-weight: 800; line-height: 1.25; overflow-wrap: anywhere; }
+      .profile-username { margin: 2px 0 0; color: var(--gold); font-weight: 600; font-size: 0.94rem; overflow-wrap: anywhere; }
+      .profile-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 18px; }
+      .stat-box { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px 6px; text-align: center; box-shadow: var(--shadow-soft); }
+      .stat-value { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 1.4rem; font-weight: 600; line-height: 1.15; color: var(--brand); }
+      .stat-label { font-size: 0.78rem; font-weight: 600; color: var(--ink-soft); margin-top: 4px; line-height: 1.3; }
+      @media (max-width: 380px) { .stat-value { font-size: 1.18rem; } }
 
-      footer { margin-top: 26px; color: var(--ink-soft); font-size: 0.85rem; }
-      footer .fine { border-top: 1px solid var(--line); padding-top: 14px; }
-      details.owner { margin-top: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 4px 14px; }
-      details.owner summary { cursor: pointer; font-weight: 700; color: var(--ink); padding: 8px 0; }
+      footer { margin-top: 28px; color: var(--ink-soft); font-size: 0.85rem; }
+      footer .fine { border-top: 1px solid var(--line); padding-top: 16px; }
+      details.owner { margin-top: 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 4px 16px; box-shadow: var(--shadow-soft); }
+      details.owner summary { cursor: pointer; font-weight: 700; color: var(--ink); padding: 10px 0; }
       details.owner code { font-family: "IBM Plex Mono", monospace; font-size: 0.82em; background: var(--surface-2); padding: 1px 5px; border-radius: 5px; word-break: break-all; }
       details.owner li { margin-bottom: 6px; }
 
       .toast {
         position: fixed; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom));
         transform: translateX(-50%) translateY(20px);
-        background: var(--ink); color: var(--bg);
+        background: linear-gradient(155deg, var(--brand), var(--brand-deep)); color: var(--brand-ink);
+        box-shadow: var(--shadow-card);
         padding: 11px 18px; border-radius: 999px; font-weight: 600; font-size: 0.92rem;
         opacity: 0; pointer-events: none; transition: opacity .25s ease, transform .25s ease;
         max-width: calc(100vw - 32px); text-align: center; z-index: 50;
       }
       .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
       @media (prefers-reduced-motion: reduce) {
-        .btn, .toast { transition: none; }
+        .btn, .toast, .tab-btn, .input-row { transition: none; }
         .btn:active { transform: none; }
       }
     </style>
@@ -437,8 +497,8 @@
         <details class="owner">
           <summary>App owner: about the ad button</summary>
           <ol>
-            <li>The “Watch ad to earn coins” button is in place on the page. No external storage or ad SDK is loaded by this page — your coin balance and unlock state are kept only in this browser's local storage on this device.</li>
-            <li>Ad rates (CPM), when ads are connected through a separate setup, are set by the ad network automatically from each visitor's real location and IP — there is no setting to change, and only genuine visitors should ever be sent to the app.</li>
+            <li>The “Watch ad to earn coins” button plays a Monetag rewarded ad (zone 12335949). Coins (+25) are added only after the ad finishes playing. Your coin balance and unlock state are kept only in this browser's local storage on this device.</li>
+            <li>Ad rates (CPM) are set by the ad network automatically from each visitor's real location and IP — there is no setting to change, and only genuine visitors should ever be sent to the app.</li>
           </ol>
         </details>
       </footer>
@@ -579,17 +639,55 @@
         })();
 
         /* ============ Monetag ad button ============
-           The button stays on the page, but this page loads no external
-           ad or storage SDK, so no ad can play from here and no coins are
-           granted on click. The button honestly reports that state. */
+           Loads the Monetag SDK in <head> (zone 12335949), which defines
+           window.show_12335949(). That function returns a promise:
+           coins are granted ONLY when the promise resolves (the ad was
+           watched to the end). If the SDK is missing, the ad fails to
+           load, or the viewer closes it early, the promise rejects (or
+           the call throws) and no coins are added. */
         var watchBtn = document.getElementById("watchAdBtn");
         var adStatus = document.getElementById("adStatus");
+        var adInProgress = false;
         function setAdStatus(msg, kind) {
           adStatus.textContent = msg;
           adStatus.className = "ad-status" + (kind ? " " + kind : "");
         }
         watchBtn.addEventListener("click", function () {
-          setAdStatus("Ads aren't connected yet — please check back soon. No coins were added.", "err");
+          if (adInProgress) return;
+          if (typeof window.show_12335949 !== "function") {
+            setAdStatus("The ad couldn't load right now — please try again in a moment. No coins were added.", "err");
+            return;
+          }
+          adInProgress = true;
+          watchBtn.disabled = true;
+          var originalLabel = watchBtn.innerHTML;
+          watchBtn.textContent = "Loading ad…";
+          setAdStatus("Loading your ad…", "");
+          var result;
+          try {
+            result = window.show_12335949();
+          } catch (e) {
+            adInProgress = false;
+            watchBtn.disabled = false;
+            watchBtn.innerHTML = originalLabel;
+            setAdStatus("The ad couldn't play — please try again in a moment. No coins were added.", "err");
+            return;
+          }
+          Promise.resolve(result).then(function () {
+            coins += COIN_REWARD;
+            adsWatched += 1;
+            saveState();
+            renderCoins();
+            setAdStatus("Thanks for watching — +" + COIN_REWARD + " coins added to your balance!", "ok");
+            toast("+" + COIN_REWARD + " coins earned");
+            haptic();
+          }).catch(function () {
+            setAdStatus("The ad didn't finish, so no coins were added. Please try again when you're ready.", "err");
+          }).then(function () {
+            adInProgress = false;
+            watchBtn.disabled = false;
+            watchBtn.innerHTML = originalLabel;
+          });
         });
 
         /* ============ Daily tips (rotate by date) ============ */
