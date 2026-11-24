@@ -164,6 +164,9 @@
       .ad-status { margin: 10px 0 0; font-size: 0.92rem; font-weight: 600; min-height: 1.4em; color: var(--brand-ink); }
       .ad-status.ok { color: var(--gold-bright); }
       .ad-status.err { color: var(--on-brand-danger); }
+      .card-status { margin: 10px 0 0; font-size: 0.92rem; font-weight: 600; min-height: 1.4em; color: var(--ink-soft); }
+      .card-status.ok { color: var(--brand); }
+      .card-status.err { color: var(--danger); }
 
       /* ---------- Sections / cards ---------- */
       section.card {
@@ -331,6 +334,22 @@
         <p class="ad-status" id="adStatus" role="status" aria-live="polite"></p>
       </section>
 
+      <!-- ===================== REWARDED POPUP AD ===================== -->
+      <section class="card" aria-label="Rewarded popup ad">
+        <h2>Rewarded Popup Ad</h2>
+        <p class="sub">A popup-style sponsored ad. Watch it all the way to the end to earn <strong>+25 coins</strong> — the same reward as the video above.</p>
+        <button class="btn btn-gold" id="watchPopBtn" type="button">▶&ensp;Watch popup ad to earn coins</button>
+        <p class="card-status" id="popStatus" role="status" aria-live="polite"></p>
+      </section>
+
+      <!-- ===================== IN-APP INTERSTITIAL ===================== -->
+      <section class="card" aria-label="In-app interstitial ads">
+        <h2>In-App Interstitial</h2>
+        <p class="sub">Monetag's automatic format. Switch it on once and short interstitial ads can appear on their own while you use the app. This format shows ads only — it doesn't award coins.</p>
+        <button class="btn btn-brand" id="inAppBtn" type="button">Turn on In-App Interstitial</button>
+        <p class="card-status" id="inAppStatus" role="status" aria-live="polite"></p>
+      </section>
+
       <!-- ===================== DAILY TIP ===================== -->
       <section class="card" aria-label="Daily finance tip">
         <p class="tip-date" id="tipDate">Today's tip</p>
@@ -495,9 +514,9 @@
         </div>
 
         <details class="owner">
-          <summary>App owner: about the ad button</summary>
+          <summary>App owner: about the ads</summary>
           <ol>
-            <li>The “Watch ad to earn coins” button plays a Monetag rewarded ad (zone 12335949). Coins (+25) are added only after the ad finishes playing. Your coin balance and unlock state are kept only in this browser's local storage on this device.</li>
+            <li>All ads run on one Monetag SDK tag (zone 12335949) in three formats: “Watch ad to earn coins” (Rewarded Interstitial) and “Rewarded Popup Ad” each add +25 coins only after the ad finishes playing; “In-App Interstitial” is Monetag's automatic format and awards no coins. Your coin balance and unlock state are kept only in this browser's local storage on this device.</li>
             <li>Ad rates (CPM) are set by the ad network automatically from each visitor's real location and IP — there is no setting to change, and only genuine visitors should ever be sent to the app.</li>
           </ol>
         </details>
@@ -638,39 +657,40 @@
           }
         })();
 
-        /* ============ Monetag ad button ============
-           Loads the Monetag SDK in <head> (zone 12335949), which defines
-           window.show_12335949(). That function returns a promise:
-           coins are granted ONLY when the promise resolves (the ad was
-           watched to the end). If the SDK is missing, the ad fails to
-           load, or the viewer closes it early, the promise rejects (or
-           the call throws) and no coins are added. */
+        /* ============ Monetag ads (one SDK tag, zone 12335949) ============
+           The SDK in <head> defines window.show_12335949(). Three formats:
+           1. Rewarded Interstitial — show_12335949() (wallet button above).
+           2. Rewarded Popup — show_12335949('pop').
+           3. In-App Interstitial — show_12335949({type:'inApp', ...}),
+              Monetag's automatic format; shows ads only, no coins.
+           For the two rewarded formats the call returns a promise: coins
+           are granted ONLY when it resolves (the ad was watched to the
+           end). If the SDK is missing, the ad fails to load, or the
+           viewer closes it early, the promise rejects (or the call
+           throws) and no coins are added. */
         var watchBtn = document.getElementById("watchAdBtn");
         var adStatus = document.getElementById("adStatus");
-        var adInProgress = false;
         function setAdStatus(msg, kind) {
           adStatus.textContent = msg;
           adStatus.className = "ad-status" + (kind ? " " + kind : "");
         }
-        watchBtn.addEventListener("click", function () {
-          if (adInProgress) return;
+        function playRewardedAd(btn, setStatus, arg) {
+          if (btn.disabled) return;
           if (typeof window.show_12335949 !== "function") {
-            setAdStatus("The ad couldn't load right now — please try again in a moment. No coins were added.", "err");
+            setStatus("The ad couldn't load right now — please try again in a moment. No coins were added.", "err");
             return;
           }
-          adInProgress = true;
-          watchBtn.disabled = true;
-          var originalLabel = watchBtn.innerHTML;
-          watchBtn.textContent = "Loading ad…";
-          setAdStatus("Loading your ad…", "");
+          btn.disabled = true;
+          var originalLabel = btn.innerHTML;
+          btn.textContent = "Loading ad…";
+          setStatus("Loading your ad…", "");
           var result;
           try {
-            result = window.show_12335949();
+            result = arg === undefined ? window.show_12335949() : window.show_12335949(arg);
           } catch (e) {
-            adInProgress = false;
-            watchBtn.disabled = false;
-            watchBtn.innerHTML = originalLabel;
-            setAdStatus("The ad couldn't play — please try again in a moment. No coins were added.", "err");
+            btn.disabled = false;
+            btn.innerHTML = originalLabel;
+            setStatus("The ad couldn't play — please try again in a moment. No coins were added.", "err");
             return;
           }
           Promise.resolve(result).then(function () {
@@ -678,16 +698,68 @@
             adsWatched += 1;
             saveState();
             renderCoins();
-            setAdStatus("Thanks for watching — +" + COIN_REWARD + " coins added to your balance!", "ok");
+            setStatus("Thanks for watching — +" + COIN_REWARD + " coins added to your balance!", "ok");
             toast("+" + COIN_REWARD + " coins earned");
             haptic();
           }).catch(function () {
-            setAdStatus("The ad didn't finish, so no coins were added. Please try again when you're ready.", "err");
+            setStatus("The ad didn't finish, so no coins were added. Please try again when you're ready.", "err");
           }).then(function () {
-            adInProgress = false;
-            watchBtn.disabled = false;
-            watchBtn.innerHTML = originalLabel;
+            btn.disabled = false;
+            btn.innerHTML = originalLabel;
           });
+        }
+        /* 1. Rewarded Interstitial (wallet) */
+        watchBtn.addEventListener("click", function () {
+          playRewardedAd(watchBtn, setAdStatus);
+        });
+        /* 2. Rewarded Popup */
+        var popBtn = document.getElementById("watchPopBtn");
+        var popStatus = document.getElementById("popStatus");
+        function setPopStatus(msg, kind) {
+          popStatus.textContent = msg;
+          popStatus.className = "card-status" + (kind ? " " + kind : "");
+        }
+        popBtn.addEventListener("click", function () {
+          playRewardedAd(popBtn, setPopStatus, "pop");
+        });
+        /* 3. In-App Interstitial — Monetag's own auto format with its
+           recommended settings. No reward: the call just activates
+           automatic interstitials for this session. */
+        var inAppBtn = document.getElementById("inAppBtn");
+        var inAppStatus = document.getElementById("inAppStatus");
+        var inAppActive = false;
+        function setInAppStatus(msg, kind) {
+          inAppStatus.textContent = msg;
+          inAppStatus.className = "card-status" + (kind ? " " + kind : "");
+        }
+        inAppBtn.addEventListener("click", function () {
+          if (inAppActive) return;
+          if (typeof window.show_12335949 !== "function") {
+            setInAppStatus("Ads couldn't load right now — please try again in a moment.", "err");
+            return;
+          }
+          try {
+            var activation = window.show_12335949({
+              type: "inApp",
+              inAppSettings: {
+                frequency: 2,
+                capping: 0.1,
+                interval: 30,
+                timeout: 5,
+                everyPage: false
+              }
+            });
+            if (activation && typeof activation.catch === "function") {
+              activation.catch(function () { /* activation is fire-and-forget */ });
+            }
+          } catch (e) {
+            setInAppStatus("In-App Interstitial couldn't start — please try again in a moment.", "err");
+            return;
+          }
+          inAppActive = true;
+          inAppBtn.disabled = true;
+          inAppBtn.textContent = "In-App Interstitial is on";
+          setInAppStatus("In-App Interstitial is on — short ads may now appear on their own while you use the app.", "ok");
         });
 
         /* ============ Daily tips (rotate by date) ============ */
